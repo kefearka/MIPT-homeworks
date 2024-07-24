@@ -51,14 +51,18 @@ int signed_iter_gcd(int x, int y)
 
 int main()
 {
-    int x = 698917;
-    int y = 102089;
-    printf("Итеративный беззнаковый НОД(%d, %d) = %d\n", x, y, iter_gcd(x, y));
+    int a;
+    int b;
     
-    int a = 14;
-    int b = -8;
-    printf("Итеративный беззнаковый НОД(%d, %d) = %d\n", a, b, iter_gcd(a, b));
-    printf("Итеративный знаковый НОД(%d, %d) = %d\n", a, b, signed_iter_gcd(a, b));
-    
+    printf("Введите числа a и b через пробел:\n");
+    if (scanf("%d%d", &a, &b) == 2)
+    	if (b != 0)
+    	{
+    		printf("беззнаковый НОД(%d, %d) = %d\n", a, b, iter_gcd(a, b));
+    		printf("знаковый НОД(%d, %d) = %d\n", a, b, signed_iter_gcd(a, b));
+    	}
+    else
+    	printf("Введены некорректные данные, либо b = 0.\nРассчет невозможен.\nВыход...\n");
+    	
     return 0;
 }

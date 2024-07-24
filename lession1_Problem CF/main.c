@@ -48,9 +48,14 @@ void continued_fraction(int a, int b)
 
 int main()
 {
-    int a = 101;
-    int b = 60;
-    continued_fraction(a, b);
+    int a;
+    int b;
+
+    printf("Введите числа a и b через пробел:\n");
+    if (scanf("%d%d", &a, &b) == 2)
+    	continued_fraction(a, b);
+    else
+    	printf("Введены некорректные данные.\nРассчет невозможен.\nВыход...\n");
 
     return 0;
 }
