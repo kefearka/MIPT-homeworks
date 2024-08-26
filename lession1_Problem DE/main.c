@@ -9,29 +9,56 @@
 
     Предлагается по заданным параметрам найти и вывести на экран любое решение,
     если оно есть или вывести на экран 0 0, если его нет.
+
+    Решил сам
 */
 
 int gcd(int a, int b)
 {
-    if(!b) return 0;
+    if(!b || !a) return 0;
     int k = a % b;
     if(!k) return b;
     return gcd(b, k);
 }
 
+int diofant_coeff(int a, int b, int *x, int *y)
+{
+	if (a == 0)
+	{
+		*x = 0; *y = 1;
+		return b;
+	}
+
+	int x1, y1;
+	
+	int d = diofant_coeff(b % a, a, &x1, &y1);
+	
+	*x = y1 - (b / a) * x1;
+	*y = x1;
+
+	return d;
+}
+
 int main()
 {
     int a, b, c, x, y;
+    
+    x = 1;
+    y = 0;
 
     printf("Введите коэффициенты Диофантового уравнения a, b и c через пробел\n");
 
     if(scanf("%d %d %d", &a, &b, &c) == 3)
     {
         int d = gcd(a, b);
+        diofant_coeff(a, b, &x, &y);
+        
         // Проверка на существование решения (b != 0 и C делится нацело на НОД(a, b))
         if((d != 0) && (c % d == 0))
         {
-            
+            printf("Для заданных коэффициетов a=%d, b=%d, c=%d,\n"
+            "Диофантово уравнение выглядит так:\n"
+            "(%d * %d) + (%d * %d) = %d\n", a, b, c, a, x * c, b, y * c, c);
         }
         else printf("0 0\n");
     }
