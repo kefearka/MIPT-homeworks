@@ -16,7 +16,7 @@
 int print_converted(unsigned n, unsigned base)
 {
     int mass[MAX_LENGHT] = {0};
-    if (base > MAX_BASE)
+    if (base > MAX_BASE || base <= 0)
     {
         printf("База = %d, а должна быть положительной и не превышать 10!\nВыход...", base);
         return -1;
