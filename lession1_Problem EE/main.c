@@ -1,3 +1,9 @@
+/*
+        Problem EE* — Расширенный алгоритм Евклида.
+
+    Решил сам
+*/
+
 #include <stdio.h>
 
 int gcd_ext(int a, int b, int *x, int *y)

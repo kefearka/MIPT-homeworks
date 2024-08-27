@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 /*
         Problem DE* — Диофантовы уравнения
     Линейное Диофантово уравнение имеет вид: ax + by = c,
@@ -12,6 +10,8 @@
 
     Решил сам
 */
+
+#include <stdio.h>
 
 int gcd(int a, int b)
 {
@@ -48,7 +48,7 @@ int main()
 
     printf("Введите коэффициенты Диофантового уравнения a, b и c через пробел\n");
 
-    if(scanf("%d %d %d", &a, &b, &c) == 3)
+    if(scanf("%d%d%d", &a, &b, &c) == 3)
     {
         int d = gcd(a, b);
         diofant_coeff(a, b, &x, &y);
