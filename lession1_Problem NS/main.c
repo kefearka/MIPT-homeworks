@@ -1,24 +1,35 @@
+/*
+        Problem NS — Системы счисления
+
+    Можно использовать деление с остатком, чтобы напечатать число в системе по основанию base.
+    Предполагается, что base <=10.
+    Требуется написать функцию, печатающую число по основанию base на экран.
+
+    Решил сам
+*/
+
 #include <stdio.h>
 
 #define MAX_LENGHT 32
+#define MAX_BASE 10
 
 int print_converted(unsigned n, unsigned base)
 {
     int mass[MAX_LENGHT] = {0};
-    if (base > 10)
+    if (base > MAX_BASE)
     {
         printf("База = %d, а должна быть положительной и не превышать 10!\nВыход...", base);
         return -1;
     }
     
-    for(int i = 31; i != 0; n /= base)
-        mass[i--]=(n % base);
-        
-    #if 0    
-    for(int i = 0; i != MAX_LENGHT; printf("%d", mass[i++]));
-    #endif
-    
-    for(int i = 0; i != MAX_LENGHT; i++)
+    int i;
+    for(i = MAX_LENGHT - 1; i >= 0; n /= base)
+    {
+        if(!n) break;
+        mass[--i] = (n % base);
+    }
+
+    for(int j = MAX_LENGHT - 1; i < j; ++i)
         printf("%d", mass[i]);
     
     return 0;
