@@ -61,7 +61,7 @@ unsigned find_major_degree(unsigned number, unsigned degree)
 unsigned find_major_coeff(unsigned number, unsigned degree)
 {
     unsigned result = 0;
-    for(unsigned i = 0; number >= result * ; ++i)
+    for(unsigned i = 0; number >= factorial(degree) * i; ++i)
         result++;
         
     return result;
@@ -69,8 +69,19 @@ unsigned find_major_coeff(unsigned number, unsigned degree)
 
 int factorial_representation(unsigned number)
 {
-    
     printf("Число %u в факториальном представлении:\n", number);
+    
+    unsigned coeff = 0; 
+    unsigned dgr = 1;
+    for(;number >= 0;)
+    {
+        dgr = find_major_degree(number, dgr);
+        coeff = find_major_coeff(number, dgr);
+        number = number - dgr - coeff;
+        dgr--;
+        printf("%u.", coeff);
+    }
+     printf("\n");
 }
 
 int main()
