@@ -51,44 +51,40 @@ unsigned factorial(unsigned degree)
 // unsigned find_major_degree(unsigned *n, unsigned d = 1) BUT, unfortunately, C has no default parameters
 unsigned find_major_degree(unsigned number, unsigned degree)
 {
-    unsigned result = 1;
-
-    result = factorial(degree);
-        
+    unsigned result = factorial(degree);
     return (result < number) ? find_major_degree(number, degree + 1) : --degree;
 }
 
 unsigned find_major_coeff(unsigned number, unsigned degree)
 {
     unsigned result = 0;
-    for(unsigned i = 0; number >= factorial(degree) * i; ++i)
-        result++;
-        
-    return result;
+    for(; number >= factorial(degree) * result; ++result);
+    return --result;
 }
 
 int factorial_representation(unsigned number)
 {
     printf("Число %u в факториальном представлении:\n", number);
     
-    unsigned coeff = 0; 
-    unsigned dgr = 1;
-    for(;number >= 0;)
+    unsigned coeff = 0;
+    unsigned dgr = find_major_degree(number, 1);
+
+    for(;dgr > 0;)
     {
-        dgr = find_major_degree(number, dgr);
         coeff = find_major_coeff(number, dgr);
-        number = number - dgr - coeff;
+        number -= (factorial(dgr) * coeff);
         dgr--;
         printf("%u.", coeff);
     }
-     printf("\n");
+    
+    printf("\n");
 }
 
 int main()
 {
     unsigned number;
 
-    printf("Введите целое неотрицательное число\n");
+    printf("Введите целое неотрицательное число:\n");
 
     if(scanf("%u", &number) == 1)
     	factorial_representation(number);
