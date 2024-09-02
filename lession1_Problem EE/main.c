@@ -33,9 +33,7 @@ int gcd_ext(int a, int b, int *x, int *y)
 
 int main()
 {
-    int a;
-    int b;
-    int x, y;
+    int a, b, x, y;
     
     printf("Введите числа a и b через пробел:\n");
     if (scanf("%d%d", &a, &b) == 2 && b != 0)
