@@ -26,13 +26,37 @@
 
 #include <stdio.h>
 
+void fibonacchi(long element_number, 
+                long long *element_val, 
+                long long *element_prev_val)
+{
+    long long result = 1ll;
+    long long prev = 0ll;
+    for(long i = 0l;; ++i)
+    {
+        if(element_number - i == 1ll)
+            *element_prev_val = result;
+        if(element_number - i == 0ll)
+        {
+            *element_val = result;
+            break;
+        }
+        result += prev;
+        prev = result;
+    }
+}
+
+
+
 int main()
 {
-    unsigned i, j, k;
+    unsigned i, j, k, i_num, j_num, k_num;
 
-    printf("Через пробел введите значение двух известных элементов ряда и номер искомого элемента\n");
-
-    if(scanf("%u%u%u", &i, &j, &k) == 3)
+    if(scanf("Введите номер известного элемента:%u", &i) == 1)
+        if(scanf("Введите значение этого элемента:%u", &i_num) == 1)
+            if(scanf("Введите номер другого известного элемента:%u", &j) == 1)
+                if(scanf("Введите значение этого элемента:%u", &j_num) == 1)
+                    if(scanf("Введите номер элемента который необходимо найти:%u", &k_num) == 1)
     	printf("Результат вычисления = %u\n", 90);
     else
     {
