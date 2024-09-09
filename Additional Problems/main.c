@@ -148,3 +148,35 @@ int main()
     return 0;
 }
 #endif
+
+#if AP == 2
+/*
+        Problem_the_Queen
+    Комбинаторика
+    Расставить на стандартной 64-клеточной шахматной доске 8 ферзей так, 
+    чтобы ни один из них не находился под боем другого.
+*/
+
+#include <stdio.h>
+#define DECK_SIZE 8
+#define FREE 0
+#define QUEEN 5
+#define NONFREE 1
+
+struct crd
+{
+    unsigned x;
+    unsigned y;
+};
+
+struct crd queens[8] = {0, 0};
+
+unsigned field[DECK_SIZE][DECK_SIZE] = {FREE};
+
+
+
+int main()
+{
+    return 0;
+}
+#endif
