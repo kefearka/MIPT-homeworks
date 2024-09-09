@@ -5,7 +5,7 @@
         Problem_from_Oleg
     
     Ряды Фибоначчи.
-    Даны значения двух элементов (i, j) ряда Фибоначчи.
+    Даны значения двух элементов (n, m) ряда Фибоначчи.
     Найти любой (k) элемент ряда.
     
     Мысль такая(думал на бумажке):
@@ -13,34 +13,38 @@
     0, 1, 1, 2, 3, 5, 8, 13 ...
 
     Если принять:
-    x0 = x;
-    x1 = y;
-    x2 = x + y;
-    x3 = x + 2y;
-    x4 = 2x + 3y;
-    x5 = 3x + 5y, то
-    x(n) = Fx(n) * x + Fy(n) * y.
+    x0 = a;
+    x1 = b;
+    x2 = a + b;
+    x3 = a + 2b;
+    x4 = 2a + 3b;
+    x5 = 3a + 5b, то
+    x(n) = Fa(n) * a + Fb(n) * b.
     Очевидно, что коэффициенты при x и y, являются классическим рядом Фибоначчи,
     тогда:
-    | n | F | Fx | Fy |
+    
+    | n | F | Fa | Fb |
     | 0 | 0 | 1  | 0  |
     | 1 | 1 | 0  | 1  |
     | 2 | 1 | 1  | 1  |
     | 3 | 2 | 1  | 2  |
     | 4 | 3 | 2  | 3  |
     | 5 | 5 | 3  | 5  |
-    Не трудно заметить, что Fx(n) = Fy(n - 1), а Fy(n) = F, тогда n-член запишется в виде:
-    x(n) = F(n - 1) * x + F(n) * y, отсюда
-         x(n) - F(n - 1)
-    y = ----------------- , тогда
-              F(n)
-             F(m) * x(n) - F(n) * x(m)
-    x = ----------------------------------- , где n и m - номера известных элементов, а x(n) и x(m) - их значения.
-         F(n - 1) * F(m) - F(m - 1) * F(n)
+    Не трудно заметить, что Fa(n) = Fb(n - 1), а Fa(n) = F, тогда n-член запишется в виде:
+    
+    x(n) = F(n - 1) * a + F(n) * b, отсюда
+    
+         x(n) - F(n - 1) * b
+    a = -------------------- , тогда
+                F(n)
+                
+          x(j) * F(i - 1) - x(i) * F(j - 1) 
+    b = ------------------------------------ , где i и j - номера известных элементов, а x(i) и x(j) - их значения.
+         F(j) * F(i - 1) -  F(i) * F(j - 1)
 
-    Т.к. задача в целых числах, x и y должны быть целыми. Если числитель = 0, решений нет (такое ощущение).
+    Т.к. задача в целых числах a / b должно быть целым.
     Решил почти сам (зациклился на том, что в произвольном ряду по Фибоначчи, 
-    обязательно должен быть элемент принимающий значение = 0. На этом и застопорился.
+    обязательно должен быть элемент принимающий значение = 0. На этом и застопорился.)
 */
 
 #include <stdio.h>
@@ -51,59 +55,77 @@ void fibonacchi(long element_number,
                 long *element_val, 
                 long *element_prev_val)
 {
-    long result = 1l;
-    long prev = 0l;
-    for(long i = 0l;; ++i)
+    if(element_number == 0l)
     {
-        if(element_number - i == 1l)
-            *element_prev_val = result;
-        if(element_number - i == 0l)
-        {
-            *element_val = result;
-            break;
-        }
-        result += prev;
-        prev = result;
+        *element_val = 0l;
+        *element_prev_val = 1l;
+        return;
     }
+    
+    if(element_number == 1l)
+    {
+        *element_val = 1l;
+        *element_prev_val = 0l;
+        return;
+    }
+    
+    long prev_prev_n = 0l;
+    long prev_n = 1l;
+    long n = 1l;
+    
+    for(long i = 3; i <= element_number; ++i)
+    {
+        prev_prev_n = prev_n;
+        prev_n = n;
+        n = prev_n + prev_prev_n;
+    }
+    
+    *element_val = n;
+    *element_prev_val = prev_n;
+    return;
 }
 
 long find_val(int i, int i_num, int j, int j_num, int k_num)
 {
-    long fn, fn_prev, fm, fm_prev, top, bot, x, y;
+    long fi, fi_prev; 
+    long fj, fj_prev;
+    long fk, fk_prev;
+    long top_b, bot_b, a, b;
     
-    fibonacchi(i_num, &fn, &fn_prev);
-    fibonacchi(j_num, &fm, &fm_prev);
+    fibonacchi(i_num, &fi, &fi_prev);
+    fibonacchi(j_num, &fj, &fj_prev);
+    fibonacchi(k_num, &fk, &fk_prev);
     
-    top = fm * i - fn * j;
+    // x(j) * F(i - 1) - x(i) * F(j - 1) 
+    top_b = (j * fi_prev) - (i * fj_prev);
     
-    if(!top) return NO_REASON;
+    // F(j) * F(i - 1) -  F(i) * F(j - 1)
+    bot_b = (fj * fi_prev) - (fi * fj_prev);
     
-    bot = fn_prev * fm - fm_prev * fn;
+    if(top_b % bot_b) return NO_REASON;
     
-    if(!bot || top % bot) return NO_REASON;
-    
-    x = top / bot;
-    
-    y = !((i - fn_prev * x) % fn) ? (i - fn_prev * x) / fn : NO_REASON;
-    
-    return ((fn_prev * x) + (fn * y));
+    b = (top_b / bot_b);
+    a = ((i - (fi * b)) / fi_prev);
+
+    return ((a * fk_prev) + (b * fk));
 }
 
 int main()
 {
-    int i, j, k, i_num, j_num, k_num;
+    int i, j, k;
+    int i_num, j_num, k_num;
     
     printf("Введите номер известного элемента:");
-    if(scanf("%d", &i) == 1)
+    if(scanf("%d", &i_num) == 1)
     {
         printf("Введите значение этого элемента:");
-        if(scanf("%d", &i_num) == 1)
+        if(scanf("%d", &i) == 1)
         {
             printf("Введите номер другого известного элемента:");
-            if(scanf("%d", &j) == 1)
+            if(scanf("%d", &j_num) == 1)
             {
                 printf("Введите значение этого элемента:");
-                if(scanf("%d", &j_num) == 1)
+                if(scanf("%d", &j) == 1)
                 {
                     printf("Введите номер элемента который необходимо найти:");
                     if(scanf("%d", &k_num) == 1)
