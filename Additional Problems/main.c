@@ -169,11 +169,27 @@ struct crd
     unsigned y;
 };
 
-struct crd queens[8] = {0, 0};
+struct crd queens[8] = {{0,0}, {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0}};
 
 unsigned field[DECK_SIZE][DECK_SIZE] = {FREE};
 
+unsigned uabs(unsigned a) { return a > 0 ? a : -a; }
 
+unsigned has_cross(unsigned new_x, unsigned new_y, unsigned current_queen)
+{
+	for(unsigned i = 0; i < current_queen; ++i)
+	{
+	    if((new_y == queens[i].y) || ((uabs(new_x - queens[i].x) == 1) && uabs(new_y - queens[i].y) == 1))
+	    {
+	        // TODO!!
+	    }
+	}
+}
+
+void f1()
+{
+// 	for(unsigned X = 0; X < 
+}
 
 int main()
 {
