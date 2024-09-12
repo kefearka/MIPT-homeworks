@@ -183,8 +183,12 @@ int has_cross(int new_x, int new_y, int current_queen)
     
 	for(int i = 0; i < current_queen; ++i)
 	{
-        if((new_y == queens[i].y) || ((uabs(new_x - queens[i].x) == 1) && (uabs(new_y - queens[i].y) == 1)))
+        if((new_y == queens[i].y) || (uabs(new_x - queens[i].x) == uabs(new_y - queens[i].y)))
+        {
+            printf(":::new_x = %d new_y = %d current_queen = %d\n", new_x + 1, new_y + 1, current_queen);
             return i;
+        }
+            
 	}
 	return -1;
 }
@@ -192,6 +196,7 @@ int has_cross(int new_x, int new_y, int current_queen)
 int find_y(unsigned q_num)
 {
     int cross = has_cross(queens[q_num].x, queens[q_num].y, q_num);
+    printf(":::cross = %d q_num = %d\n", cross + 1, q_num);
     if(cross != -1)
     {
         ++queens[q_num].y;
@@ -222,10 +227,11 @@ void show_queens_coords()
 
 void show_deck()
 {
-    printf("\n   A  B  C  D  E  F  G  H\n");
+    // printf("\n   A  B  C  D  E  F  G  H\n");
+    printf("\n   1  2  3  4  5  6  7  8\n");
     for(int x = 0; x < DECK_SIZE; ++x)
     {
-        printf("%d ", DECK_SIZE - x);
+        printf("%d ", x + 1);
         for(int y = 0; y < DECK_SIZE; ++y)
         {
             // for(int q = 0; q < DECK_SIZE; ++q)
