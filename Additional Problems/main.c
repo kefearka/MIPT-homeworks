@@ -158,41 +158,104 @@ int main()
 */
 
 #include <stdio.h>
+
 #define DECK_SIZE 8
 #define FREE 0
 #define QUEEN 5
 #define NONFREE 1
+// #define NO_REASON -2147483648
 
 struct crd
 {
-    unsigned x;
-    unsigned y;
+    int x;
+    int y;
 };
 
 struct crd queens[8] = {{0,0}, {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0}};
 
-unsigned field[DECK_SIZE][DECK_SIZE] = {FREE};
+// unsigned field[DECK_SIZE][DECK_SIZE] = {FREE};
 
-unsigned uabs(unsigned a) { return a > 0 ? a : -a; }
+unsigned uabs(int a) { return a > 0 ? a : -a; }
 
-unsigned has_cross(unsigned new_x, unsigned new_y, unsigned current_queen)
+int has_cross(int new_x, int new_y, int current_queen)
 {
-	for(unsigned i = 0; i < current_queen; ++i)
+    // if (!current_queen) return -1;
+    
+	for(int i = 0; i < current_queen; ++i)
 	{
-	    if((new_y == queens[i].y) || ((uabs(new_x - queens[i].x) == 1) && uabs(new_y - queens[i].y) == 1))
-	    {
-	        // TODO!!
-	    }
+        if((new_y == queens[i].y) || ((uabs(new_x - queens[i].x) == 1) && (uabs(new_y - queens[i].y) == 1)))
+            return i;
 	}
+	return -1;
+}
+
+int find_y(unsigned q_num)
+{
+    int cross = has_cross(queens[q_num].x, queens[q_num].y, q_num);
+    if(cross != -1)
+    {
+        ++queens[q_num].y;
+        
+        if(queens[q_num].y > DECK_SIZE - 1)
+        {
+            for(int i = 0; i < q_num; ++i)
+            {
+                queens[i].y++;
+                if(queens[i].y > DECK_SIZE - 1)
+                    queens[i].y = 0;
+            }
+            queens[q_num].y = 0;
+        }
+        return find_y(q_num);
+    }
+    else return -1;
+}
+
+
+void show_queens_coords()
+{
+    for(int i = 0; i < DECK_SIZE; ++i)
+    {
+        printf("x = %d, y = %d\n", queens[i].x + 1, queens[i].y + 1);
+    }
+}
+
+void show_deck()
+{
+    printf("\n   A  B  C  D  E  F  G  H\n");
+    for(int x = 0; x < DECK_SIZE; ++x)
+    {
+        printf("%d ", DECK_SIZE - x);
+        for(int y = 0; y < DECK_SIZE; ++y)
+        {
+            // for(int q = 0; q < DECK_SIZE; ++q)
+            if((x == queens[x].x) && (y == queens[x].y))
+                printf(" ♛ ");
+            else
+                printf(" . ");
+        }
+        printf("\n");
+    }
 }
 
 void f1()
 {
-// 	for(unsigned X = 0; X < 
+    for(unsigned q_num = 0; q_num < DECK_SIZE; ++q_num)
+    {
+        printf("-----------q = %d----------\n", q_num);
+        find_y(q_num);
+        show_deck();
+        printf("---------------------------\n\n");
+    }
 }
+
 
 int main()
 {
+    // show_deck();
+    f1();
+    show_queens_coords();
+    // show_deck();
     return 0;
 }
 #endif
