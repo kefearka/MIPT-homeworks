@@ -188,7 +188,6 @@ int has_cross(int new_x, int new_y, int current_queen)
             printf(":::new_x = %d new_y = %d current_queen = %d\n", new_x + 1, new_y + 1, current_queen);
             return i;
         }
-            
 	}
 	return -1;
 }
@@ -203,13 +202,14 @@ int find_y(unsigned q_num)
         
         if(queens[q_num].y > DECK_SIZE - 1)
         {
-            for(int i = 0; i < q_num; ++i)
+            for(int i = 0; i <= q_num; ++i)
             {
                 queens[i].y++;
                 if(queens[i].y > DECK_SIZE - 1)
                     queens[i].y = 0;
             }
             queens[q_num].y = 0;
+            return find_y(--q_num);
         }
         return find_y(q_num);
     }
