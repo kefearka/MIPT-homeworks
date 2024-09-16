@@ -160,10 +160,6 @@ int main()
 #include <stdio.h>
 
 #define DECK_SIZE 8
-#define FREE 0
-#define QUEEN 5
-#define NONFREE 1
-// #define NO_REASON -2147483648
 
 struct crd
 {
@@ -173,56 +169,19 @@ struct crd
 
 struct crd queens[8] = {{0,0}, {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0}};
 
-// unsigned field[DECK_SIZE][DECK_SIZE] = {FREE};
-
-unsigned uabs(int a) { return a > 0 ? a : -a; }
-
-int has_cross(int new_x, int new_y, int current_queen)
+unsigned uabs(int a) 
 {
-    // if (!current_queen) return -1;
-    
-	for(int i = 0; i < current_queen; ++i)
-	{
-        if((new_y == queens[i].y) || (uabs(new_x - queens[i].x) == uabs(new_y - queens[i].y)))
-        {
-            printf(":::new_x = %d new_y = %d current_queen = %d\n", new_x + 1, new_y + 1, current_queen);
-            return i;
-        }
-	}
-	return -1;
+    return a > 0 ? a : -a;
 }
-
-int find_y(unsigned q_num)
-{
-    int cross = has_cross(queens[q_num].x, queens[q_num].y, q_num);
-    printf(":::cross = %d q_num = %d\n", cross + 1, q_num);
-    if(cross != -1)
-    {
-        ++queens[q_num].y;
-        
-        if(queens[q_num].y > DECK_SIZE - 1)
-        {
-            for(int i = 0; i <= q_num; ++i)
-            {
-                queens[i].y++;
-                if(queens[i].y > DECK_SIZE - 1)
-                    queens[i].y = 0;
-            }
-            queens[q_num].y = 0;
-            return find_y(--q_num);
-        }
-        return find_y(q_num);
-    }
-    else return -1;
-}
-
 
 void show_queens_coords()
 {
+    printf("n\tx\ty\n");
     for(int i = 0; i < DECK_SIZE; ++i)
     {
-        printf("x = %d, y = %d\n", queens[i].x + 1, queens[i].y + 1);
+        printf("%d\t%d\t%d\n", i + 1, queens[i].x + 1, queens[i].y + 1);
     }
+    printf("\n");
 }
 
 void show_deck()
@@ -234,7 +193,6 @@ void show_deck()
         printf("%d ", x + 1);
         for(int y = 0; y < DECK_SIZE; ++y)
         {
-            // for(int q = 0; q < DECK_SIZE; ++q)
             if((x == queens[x].x) && (y == queens[x].y))
                 printf(" ♛ ");
             else
@@ -244,24 +202,57 @@ void show_deck()
     }
 }
 
-void f1()
+int has_cross(int new_x, int new_y, int current_queen)
 {
-    for(unsigned q_num = 0; q_num < DECK_SIZE; ++q_num)
-    {
-        printf("-----------q = %d----------\n", q_num);
-        find_y(q_num);
-        show_deck();
-        printf("---------------------------\n\n");
-    }
+	for(int i = current_queen - 1; i >= 0; --i)
+	{
+        if((new_y == queens[i].y) || (uabs(new_x - queens[i].x) == uabs(new_y - queens[i].y)))
+        {
+            printf(":::Ферзь №%d(%d;%d) под боем ферзя №%d(%d;%d)\n", current_queen, new_x, new_y, queens[i].x, queens[i].y, i);
+            return i;
+        }
+	}
+	printf("---Ферзь №%d(%d;%d) размещён\n", current_queen, new_x, new_y);
+	return -1;
 }
 
+int queens_recursion(unsigned q_num)
+{
+    show_deck();
+    
+    int cross = has_cross(queens[q_num].x, queens[q_num].y, q_num);
+    
+    if(cross != -1)
+    {
+        ++queens[q_num].y;
+        if(queens[q_num].y > DECK_SIZE - 1)
+        {
+            if(q_num > DECK_SIZE - 1)
+            {
+                q_num = 0;
+                ++queens[q_num].y;
+            }
+            else q_num -= 1;
+            
+            return queens_recursion(q_num);
+        }
+        // else return queens_recursion(q_num);
+        return queens_recursion(q_num);
+    }
+    else 
+    {
+        
+        return queens_recursion(++q_num);
+    }
+}
 
 int main()
 {
     // show_deck();
-    f1();
+    queens_recursion(0);
     show_queens_coords();
-    // show_deck();
+    show_deck();
     return 0;
+}
 }
 #endif
