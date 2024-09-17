@@ -220,39 +220,30 @@ int queens_recursion(unsigned q_num)
 {
     show_deck();
     
+    int q = q_num;
+    
     int cross = has_cross(queens[q_num].x, queens[q_num].y, q_num);
     
     if(cross != -1)
     {
         ++queens[q_num].y;
+        
         if(queens[q_num].y > DECK_SIZE - 1)
         {
-            if(q_num > DECK_SIZE - 1)
-            {
-                q_num = 0;
-                ++queens[q_num].y;
-            }
-            else q_num -= 1;
-            
-            return queens_recursion(q_num);
+            queens[q_num].y = 0;
+            queens[cross].y = (queens[cross].y > (DECK_SIZE - 1)) ? 0 : ++queens[cross].y;
+            return queens_recursion(cross);
         }
-        // else return queens_recursion(q_num);
         return queens_recursion(q_num);
     }
-    else 
-    {
-        
-        return queens_recursion(++q_num);
-    }
+    else return q_num > DECK_SIZE - 1 ? 0 : queens_recursion(q_num + 1);
 }
 
 int main()
 {
-    // show_deck();
     queens_recursion(0);
     show_queens_coords();
     show_deck();
     return 0;
-}
 }
 #endif
