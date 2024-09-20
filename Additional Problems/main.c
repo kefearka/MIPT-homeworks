@@ -155,6 +155,9 @@ int main()
     Комбинаторика
     Расставить на стандартной 64-клеточной шахматной доске 8 ферзей так, 
     чтобы ни один из них не находился под боем другого.
+    
+    Решал сам, подглядел немного кода на javascript
+    TODO: Показывать все варианты.
 */
 
 #include <stdio.h>
@@ -167,7 +170,9 @@ struct crd
     int y;
 };
 
-struct crd queens[8] = {{0,0}, {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0}};
+struct crd queens[DECK_SIZE] = {{0,0}, {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0}};
+
+unsigned variant = 0;
 
 unsigned uabs(int a) 
 {
@@ -208,42 +213,43 @@ int has_cross(int new_x, int new_y, int current_queen)
 	{
         if((new_y == queens[i].y) || (uabs(new_x - queens[i].x) == uabs(new_y - queens[i].y)))
         {
-            printf(":::Ферзь №%d(%d;%d) под боем ферзя №%d(%d;%d)\n", current_queen, new_x, new_y, queens[i].x, queens[i].y, i);
+        //    printf(":::Ферзь №%d(%d;%d) под боем ферзя №%d(%d;%d)\n", current_queen, new_x, new_y, queens[i].x, queens[i].y, i);
             return i;
         }
 	}
-	printf("---Ферзь №%d(%d;%d) размещён\n", current_queen, new_x, new_y);
+	//printf("---Ферзь №%d(%d;%d) размещён\n", current_queen, new_x, new_y);
 	return -1;
 }
 
 int queens_recursion(unsigned q_num)
 {
-    show_deck();
-    
-    int q = q_num;
-    
     int cross = has_cross(queens[q_num].x, queens[q_num].y, q_num);
     
-    if(cross != -1)
+    if(cross == -1)
     {
-        ++queens[q_num].y;
-        
-        if(queens[q_num].y > DECK_SIZE - 1)
+        if(q_num == DECK_SIZE - 1)
         {
-            queens[q_num].y = 0;
-            queens[cross].y = (queens[cross].y > (DECK_SIZE - 1)) ? 0 : ++queens[cross].y;
-            return queens_recursion(cross);
+            show_deck();
+            show_queens_coords();
+            variant++;
+            queens[0].y++;
+            return 0;
         }
-        return queens_recursion(q_num);
+        else
+        {
+            for(int t = 0; t < DECK_SIZE; ++t)
+            {
+                queens[q_num + 1].y = t;
+                queens_recursion(q_num + 1);
+            }
+        }
     }
-    else return q_num > DECK_SIZE - 1 ? 0 : queens_recursion(q_num + 1);
 }
 
 int main()
 {
     queens_recursion(0);
-    show_queens_coords();
-    show_deck();
+    printf("Найдено %d решений", variant);
     return 0;
 }
 #endif
